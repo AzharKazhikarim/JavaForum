@@ -1,0 +1,89 @@
+body{
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+
+}
+
+.login{
+   width: 100vw;
+   height: 100vh;
+   background-color: #a1b4d4;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background-image: "src\assets\coverLog.png";
+}
+.loginWrapper{
+    width: 70%;
+    height: 70%;
+    display: flex;
+ 
+}
+
+.loginleft,.loginright{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.loginheader{
+    font-size: 70px;
+    margin-bottom: 10px;
+    color:white;
+    
+}
+.loginparagraph{
+    font-size: 20px;
+    color:aliceblue;
+    margin-left: 8px;
+}
+
+.loginbox{
+   height: 300px;
+   padding: 20px;
+   border-radius: 10px;
+   background-color:aliceblue;
+   display: flex;
+   flex-direction: column;
+  justify-content: space-between;
+
+}
+.input{
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid gray;
+    font-size: 18px;
+    padding-left: 20px;
+}
+.input:focus{
+    outline:none;
+}
+
+.link{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hasAcc{
+   font-size: 15px;
+   text-decoration: none;
+}
+.hasAcc:hover{
+   color:#a1b4d4;
+ }
+
+.loginbutton{
+    height: 50px;
+    width: 70%;
+    align-self: center;
+    border: none;
+    border-radius: 10px;
+    font-size: 20px;
+    background-color:#494991;
+    font-weight: 500;
+    color:white;
+    cursor:pointer;
+
+}

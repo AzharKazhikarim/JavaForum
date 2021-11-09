@@ -1,0 +1,107 @@
+
+.searchBar{
+    width: 50%;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin: 10px;
+   
+}
+
+.searchInput{
+    width: 100%;
+    outline: none;
+    padding:10px;
+    border:0;
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+    border-radius: 10px;
+}
+.btn {
+    background-color: #2d5271 ;
+    color:aliceblue;
+}
+
+.adContainer{
+    border-radius: 10px;
+    width: 100%;
+   background-color:aliceblue;
+   padding: 10px;
+   margin-top: 30px;
+
+}
+.iconUser{
+ 
+    width: 30%;
+    display: flex;
+    align-items: center;
+   
+}
+.title{
+    width: 100%;
+    
+}
+
+
+
+
+.blogPost{
+  
+    border-radius: 10px;
+    width: 100%;
+   background-color: rgb(205, 217, 231);
+    height: 450px;
+   margin-top: 30px;
+  
+    }
+    .blogBox{
+    padding: 10px;
+    flex-direction: column;
+    
+    }
+    .blogTitle{
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    width: 30%;
+    height: 50px;
+    font-size: 18px;
+    margin-bottom: 10px;
+    }
+    
+    .blogTitle:focus{
+        outline: none;
+    }
+    
+    textarea{
+        tab-size: 8;
+    
+    }
+    .blogText{
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    width:100%;
+    height: 180px;
+    font-size: 18px;
+    height: 70%;
+    
+    }
+    
+    
+    .blogText:focus{
+        outline: none;
+    }
+    .headerWrapper{
+        display: flex;
+        align-items: center;
+    }
+
+    
+
+    .header{
+        margin-top: 20px;
+        color: aliceblue;
+        align-self: center;
+        
+    
+    }
