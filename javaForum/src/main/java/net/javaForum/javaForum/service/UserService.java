@@ -32,42 +32,42 @@ import java.util.Optional;
 @Slf4j
 public class UserService implements UserDetailsService {
 
-
-    private  final UserRepo userRepository;
+    private final UserRepo userRepository;
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             log.error("User not found");
             throw new UsernameNotFoundException("User not found in the database");
-        }else{
+        } else {
             log.info("User found in the database: {}", username);
         }
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.get().getRoles().forEach(role -> {authorities.add(new SimpleGrantedAuthority(role.getName())); });
-        return  new org.springframework.security.core.userdetails.User(user.get().getUsername(), user.get().getPassword(), authorities);
+        user.get().getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        });
+        return new org.springframework.security.core.userdetails.User(user.get().getUsername(), user.get().getPassword(), authorities);
     }
 
+    public boolean createUser(User user) {
 
 
-    public boolean createUser(User user){
-
-
-        if(userRepository.findByUsername(user.getUsername()).isPresent()){
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             return false;
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-        addRoleToUser(user.getUsername(),"ROLE_USER");
+        addRoleToUser(user.getUsername(), "ROLE_USER");
         return true;
     }
-    public User update(String username, User updated){
 
-        if(userRepository.existsByUsername(username)){
+    public User update(String username, User updated) {
+
+        if (userRepository.existsByUsername(username)) {
 
             User user = userRepository.getByUsername(username);
             userRepository.deleteByUsername(user.getUsername());
@@ -78,15 +78,16 @@ public class UserService implements UserDetailsService {
         return null;
     }
 
-    public User getUser(String username){
-        if(userRepository.findByUsername(username).isPresent()){
-            return  userRepository.findByUsername(username).get();
+    public User getUser(String username) {
+        if (userRepository.findByUsername(username).isPresent()) {
+            return userRepository.findByUsername(username).get();
         }
         return null;
     }
-    public boolean delete(String username){
 
-        if(userRepository.findByUsername(username).isPresent()){
+    public boolean delete(String username) {
+
+        if (userRepository.findByUsername(username).isPresent()) {
 
             userRepository.deleteByUsername(username);
             return true;
@@ -94,34 +95,33 @@ public class UserService implements UserDetailsService {
 
         return false;
     }
-    public List<Question> getQuestionByEmail(String username) throws Exception{
+
+    public List<Question> getQuestionByEmail(String username) throws Exception {
         Optional<User> user = userRepository.findByUsername(username);
-        if(user.isPresent()){
+        if (user.isPresent()) {
             return user.get().getQuestionList();
         }
-        throw  new Exception();
+        throw new Exception();
     }
-    public List<Ad> getAdByEmail(String username) throws Exception{
+
+    public List<Ad> getAdByEmail(String username) throws Exception {
         Optional<User> user = userRepository.findByUsername(username);
-        if(user.isPresent()){
+        if (user.isPresent()) {
             return user.get().getAdList();
         }
-        throw  new Exception();
+        throw new Exception();
     }
 
 
-
-    public Role saveRole(Role role){
-        log.info("Saving new role {} to DB",role.getName());
+    public Role saveRole(Role role) {
+        log.info("Saving new role {} to DB", role.getName());
         return roleRepo.save(role);
     }
 
-    public void addRoleToUser(String username,String roleName){
-    log.info("Adding role {} to user {} ", roleName,username);
-    Optional<User> user =  userRepository.findByUsername(username);
-    Role role = roleRepo.findByName(roleName);
-    user.get().getRoles().add(role);
+    public void addRoleToUser(String username, String roleName) {
+        log.info("Adding role {} to user {} ", roleName, username);
+        Optional<User> user = userRepository.findByUsername(username);
+        Role role = roleRepo.findByName(roleName);
+        user.get().getRoles().add(role);
     }
-
-
 }

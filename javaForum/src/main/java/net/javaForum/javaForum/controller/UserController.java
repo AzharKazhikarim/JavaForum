@@ -37,35 +37,35 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-
 @RequestMapping("/user")
 @Slf4j
-public class UserController{
+public class UserController {
 
     @Autowired
     UserService userService;
     Func func = new Func();
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     //CREATE
     @PostMapping("/register")
-    public ResponseEntity<?> saveUser(@RequestBody User user){
+    public ResponseEntity<?> saveUser(@RequestBody User user) {
         boolean saving = userService.createUser(user);
         if (saving) {
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
-        return   ResponseEntity.badRequest().body("Bad request");
+        return ResponseEntity.badRequest().body("Bad request");
     }
 
     //UPDATE
     @PutMapping("/update")
-    public ResponseEntity<?> update(HttpServletRequest request, HttpServletResponse response,@RequestBody User user) throws IOException {
-        String username = func.getUsernameByToken(request,response);
-        User requestUser = userService.update(username,user);
-        if(requestUser!=null){
-            return new ResponseEntity(user,HttpStatus.OK);
+    public ResponseEntity<?> update(HttpServletRequest request, HttpServletResponse response, @RequestBody User user) throws IOException {
+        String username = func.getUsernameByToken(request, response);
+        User requestUser = userService.update(username, user);
+        if (requestUser != null) {
+            return new ResponseEntity(user, HttpStatus.OK);
         }
         return ResponseEntity.badRequest().body("User does not exists");
     }
@@ -74,20 +74,19 @@ public class UserController{
     @GetMapping("/get-user/{username}")
     public ResponseEntity<?> read(@PathVariable String username) throws IOException {
         User user = userService.getUser(username);
-        if(user!=null){
-            return new ResponseEntity(user,HttpStatus.OK);
+        if (user != null) {
+            return new ResponseEntity(user, HttpStatus.OK);
         }
         return ResponseEntity.badRequest().body("User does not exists");
     }
 
 
-
     @GetMapping("/get-profile")
     public ResponseEntity<?> getProfile(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String username = func.getUsernameByToken(request,response);
+        String username = func.getUsernameByToken(request, response);
         User user = userService.getUser(username);
-        if(user!=null){
-            return new ResponseEntity(user,HttpStatus.OK);
+        if (user != null) {
+            return new ResponseEntity(user, HttpStatus.OK);
         }
         return ResponseEntity.badRequest().body("User does not exists");
     }
@@ -95,31 +94,31 @@ public class UserController{
     //DELETE
     @DeleteMapping("/delete-user")
     public boolean delete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String username = func.getUsernameByToken(request,response);
+        String username = func.getUsernameByToken(request, response);
         return userService.delete(username);
     }
 
-
     @GetMapping("/get-list-que")
     public ResponseEntity<Question> getListQue(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String username = func.getUsernameByToken(request,response);
+        String username = func.getUsernameByToken(request, response);
 
-        return new ResponseEntity(userService.getQuestionByEmail(username),HttpStatus.OK);
+        return new ResponseEntity(userService.getQuestionByEmail(username), HttpStatus.OK);
     }
 
     @GetMapping("/get-list-ad")
     public ResponseEntity<Ad> getListAd(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String username = func.getUsernameByToken(request,response);
-        return new ResponseEntity(userService.getAdByEmail(username),HttpStatus.OK);
+        String username = func.getUsernameByToken(request, response);
+        return new ResponseEntity(userService.getAdByEmail(username), HttpStatus.OK);
     }
 
 
     @PostMapping("role/save")
-    public ResponseEntity<Role> saveRole (@RequestBody Role role){
+    public ResponseEntity<Role> saveRole(@RequestBody Role role) {
         return ResponseEntity.ok(userService.saveRole(role));
     }
+
     @PostMapping("/role/addtouser")
-    public ResponseEntity<Role>addRoleToUser(@RequestBody RoleToUserForm form){
+    public ResponseEntity<Role> addRoleToUser(@RequestBody RoleToUserForm form) {
         userService.addRoleToUser(form.getEmail(), form.getRoleName());
         return ResponseEntity.ok().build();
     }
@@ -127,8 +126,8 @@ public class UserController{
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
-        if(authorizationHeader!=null && authorizationHeader.startsWith("Bearer ")){
-            try{
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            try {
                 String refresh_token = authorizationHeader.substring("Bearer ".length());
                 Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
                 JWTVerifier verifier = JWT.require(algorithm).build();
@@ -137,37 +136,34 @@ public class UserController{
                 User user = userService.getUser(username);
                 String access_token = JWT.create()
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 10*60*1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
                         .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
                         .sign(algorithm);
 
-                Map<String,String> tokens = new HashMap<>();
-                tokens.put("access_token",access_token);
-                tokens.put("refresh_token",refresh_token);
+                Map<String, String> tokens = new HashMap<>();
+                tokens.put("access_token", access_token);
+                tokens.put("refresh_token", refresh_token);
                 response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(),tokens);
+                new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 
-            }catch (Exception e){
-                response.setHeader("error",e.getMessage());
+            } catch (Exception e) {
+                response.setHeader("error", e.getMessage());
                 response.setStatus(FORBIDDEN.value());
-                Map<String,String> error = new HashMap<>();
-                error.put("error_message",e.getMessage());
+                Map<String, String> error = new HashMap<>();
+                error.put("error_message", e.getMessage());
                 response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(),error);
+                new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
 
-        }else{
-          throw new RuntimeException("Refresh token is missing");
+        } else {
+            throw new RuntimeException("Refresh token is missing");
         }
     }
-
-
-
 }
 
 @Data
-class RoleToUserForm{
+class RoleToUserForm {
     private String email;
     private String roleName;
 }

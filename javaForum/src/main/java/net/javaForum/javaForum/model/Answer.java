@@ -9,7 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name="answer")
+@Table(name = "answer")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="answer_id")
+    @Column(name = "answer_id")
     private Long id;
 
     @Column(columnDefinition = "TEXT")
